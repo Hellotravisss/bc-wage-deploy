@@ -1,58 +1,516 @@
-
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>BC 工资计算器</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BC Salary Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .calculator-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px !important;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.25);
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .table {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            color: #2c3e50;
+        }
+
+        .table td, .table th {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        #totalGross, #netPay {
+            font-size: 1.2rem;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem !important;
+        }
+    </style>
 </head>
 <body>
-  <h1>BC 工资计算器</h1>
+    <div class="container calculator-container">
+        <h1 class="mb-4">BC Salary Calculator</h1>
+        
+        <!-- Default Schedule Settings -->
+        <div class="mb-4">
+            <h3>Default Schedule Settings</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="hourlyRate" class="form-label">Hourly Rate (CAD)</label>
+                        <input type="number" class="form-control" id="hourlyRate" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="cycleStartDate" class="form-label">Pay Period Start Date</label>
+                        <input type="date" class="form-control" id="cycleStartDate">
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3 mb-3">
+                <h5>Select Your Regular Work Days</h5>
+                <div class="mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="monday" checked>
+                        <label class="form-check-label" for="monday">Monday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="tuesday" checked>
+                        <label class="form-check-label" for="tuesday">Tuesday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="wednesday" checked>
+                        <label class="form-check-label" for="wednesday">Wednesday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="thursday" checked>
+                        <label class="form-check-label" for="thursday">Thursday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="friday">
+                        <label class="form-check-label" for="friday">Friday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="saturday">
+                        <label class="form-check-label" for="saturday">Saturday</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="sunday">
+                        <label class="form-check-label" for="sunday">Sunday</label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="defaultStartTime" class="form-label">Default Start Time</label>
+                        <input type="time" class="form-control" id="defaultStartTime" value="06:00">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="defaultEndTime" class="form-label">Default End Time</label>
+                        <input type="time" class="form-control" id="defaultEndTime" value="18:00">
+                    </div>
+                </div>
+                
+                <!-- Night Premium Settings -->
+                <div class="card p-3 mt-3">
+                    <h5>Night Premium Settings</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="nightPremiumStart" class="form-label">Premium Start Time</label>
+                            <input type="time" class="form-control" id="nightPremiumStart" value="16:00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nightPremiumEnd" class="form-label">Premium End Time</label>
+                            <input type="time" class="form-control" id="nightPremiumEnd" value="06:00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nightPremiumRate" class="form-label">Premium Rate (CAD/hour)</label>
+                            <input type="number" class="form-control" id="nightPremiumRate" value="7.50" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <button class="btn btn-success" onclick="addDefaultSchedule()">Add Two Week Schedule</button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-warning" onclick="clearAllShifts()">Clear All Shifts</button>
+                </div>
+            </div>
+        </div>
 
-  <div class="input-section">
-    <label>夜班补贴（每小时）：<input id="nightPremiumRate" value="7.5" /></label>
-    <button id="addShiftBtn">添加班次</button>
-    <button id="setDefaultTimesBtn">使用默认时间</button>
-  </div>
+        <!-- Work Schedule -->
+        <div class="mb-4">
+            <h3>Adjust Individual Shifts</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="workDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="workDate">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="startTime" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="startTime">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="endTime" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="endTime">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addShift()">Add/Update Single Shift</button>
+        </div>
 
-  <div class="shift-form">
-    <label>日期: <input id="shiftDate" type="date" /></label>
-    <label>时薪: <input id="hourlyRate" type="number" /></label>
-    <label>开始时间: <input id="startTime" type="time" /></label>
-    <label>结束时间: <input id="endTime" type="time" /></label>
-  </div>
+        <!-- Shifts List -->
+        <div class="mb-4">
+            <h3>Recorded Shifts</h3>
+            <div id="shiftsList" class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Regular Hours</th>
+                            <th>Overtime (1.5x)</th>
+                            <th>Overtime (2x)</th>
+                            <th>Night Hours</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shiftsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>日期</th>
-        <th>时薪</th>
-        <th>开始</th>
-        <th>结束</th>
-        <th>Regular</th>
-        <th>OT x1.5</th>
-        <th>OT x2</th>
-        <th>夜班</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody id="shiftsTableBody"></tbody>
-  </table>
+        <!-- Results -->
+        <div class="result-section">
+            <h3>Bi-weekly Pay Summary</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Gross Pay</h4>
+                    <p>Regular Hours: <span id="regularPay">$0.00</span></p>
+                    <p>Overtime (1.5x): <span id="overtimePay15">$0.00</span></p>
+                    <p>Overtime (2x): <span id="overtimePay2">$0.00</span></p>
+                    <p>Night Premium: <span id="nightDiffPay">$0.00</span></p>
+                    <h5>Total Gross: <span id="totalGross">$0.00</span></h5>
+                </div>
+                <div class="col-md-6">
+                    <h4>Deductions</h4>
+                    <p>Federal Tax: <span id="federalTax">$0.00</span></p>
+                    <p>Provincial Tax: <span id="provincialTax">$0.00</span></p>
+                    <p>CPP: <span id="cpp">$0.00</span></p>
+                    <p>EI: <span id="ei">$0.00</span></p>
+                    <h5>Total Deductions: <span id="totalDeductions">$0.00</span></h5>
+                    <h5>Net Pay: <span id="netPay">$0.00</span></h5>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div class="result">
-    <p>Regular Pay: <span id="regularPay">$0.00</span></p>
-    <p>OT x1.5 Pay: <span id="overtimePay15">$0.00</span></p>
-    <p>OT x2 Pay: <span id="overtimePay2">$0.00</span></p>
-    <p>夜班津贴: <span id="nightDiffPay">$0.00</span></p>
-    <p><strong>Gross Pay: <span id="totalGross">$0.00</span></strong></p>
-    <p>CPP: <span id="cpp">$0.00</span></p>
-    <p>EI: <span id="ei">$0.00</span></p>
-    <p>联邦税: <span id="federalTax">$0.00</span></p>
-    <p>BC 省税: <span id="provincialTax">$0.00</span></p>
-    <p>总扣税: <span id="totalDeductions">$0.00</span></p>
-    <p><strong>税后工资 Net Pay: <span id="netPay">$0.00</span></strong></p>
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let shifts = [];
 
-  <script src="script.js"></script>
+        // 添加默认班次（两周）
+        function addDefaultSchedule() {
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
+            const defaultStartTime = document.getElementById('defaultStartTime').value;
+            const defaultEndTime = document.getElementById('defaultEndTime').value;
+            const cycleStartDate = document.getElementById('cycleStartDate').value;
+            
+            if (!hourlyRate || !defaultStartTime || !defaultEndTime || !cycleStartDate) {
+                alert('Please enter all required information (hourly rate, schedule times, and pay period start date)!');
+                return;
+            }
+
+            // 获取选中的工作日
+            const workDays = [];
+            ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].forEach((day, index) => {
+                if (document.getElementById(day).checked) {
+                    workDays.push(index);
+                }
+            });
+
+            if (workDays.length === 0) {
+                alert('Please select at least one work day!');
+                return;
+            }
+
+            // 清空现有的班次
+            if (shifts.length > 0) {
+                if (!confirm('This will clear existing shifts and add new ones. Continue?')) {
+                    return;
+                }
+                shifts = [];
+            }
+
+            // 从选定的起始日期开始
+            const startDate = new Date(cycleStartDate);
+            startDate.setHours(0, 0, 0, 0);
+
+            // 添加两周的班次
+            for (let day = 0; day < 14; day++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + day);
+                
+                const dayOfWeek = currentDate.getDay();
+                
+                if (workDays.includes(dayOfWeek)) {
+                    const dateString = currentDate.toISOString().split('T')[0];
+                    const shift = calculateShiftHours(dateString, defaultStartTime, defaultEndTime);
+                    shift.hourlyRate = hourlyRate;
+                    shifts.push(shift);
+                }
+            }
+            
+            shifts.sort((a, b) => new Date(a.date) - new Date(b.date));
+            updateShiftsTable();
+            calculatePay();
+        }
+
+        // 添加单个班次
+        function addShift() {
+            const date = document.getElementById('workDate').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
+
+            if (!date || !startTime || !endTime || !hourlyRate) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            const existingShiftIndex = shifts.findIndex(shift => shift.date === date);
+            if (existingShiftIndex !== -1) {
+                if (confirm('A shift for this date already exists. Do you want to replace it?')) {
+                    shifts.splice(existingShiftIndex, 1);
+                } else {
+                    return;
+                }
+            }
+
+            const shift = calculateShiftHours(date, startTime, endTime);
+            shift.hourlyRate = hourlyRate;
+            shifts.push(shift);
+            
+            shifts.sort((a, b) => new Date(a.date) - new Date(b.date));
+            updateShiftsTable();
+            calculatePay();
+
+            document.getElementById('workDate').value = '';
+            document.getElementById('startTime').value = '';
+            document.getElementById('endTime').value = '';
+        }
+
+        // 计算工作时间
+        function calculateShiftHours(date, startTime, endTime) {
+            const start = new Date(`${date}T${startTime}`);
+            let end = new Date(`${date}T${endTime}`);
+            
+            if (end < start) {
+                end = new Date(`${date}T${endTime}`);
+                end.setDate(end.getDate() + 1);
+            }
+
+            const totalHours = (end - start) / (1000 * 60 * 60);
+            let nightHours = 0;
+            let currentTime = new Date(start);
+            
+            // 获取夜班时间设置
+            const nightStart = document.getElementById('nightPremiumStart').value;
+            const nightEnd = document.getElementById('nightPremiumEnd').value;
+            
+            // 转换夜班开始和结束时间为小时和分钟
+            const [nightStartHour, nightStartMinute] = nightStart.split(':').map(Number);
+            const [nightEndHour, nightEndMinute] = nightEnd.split(':').map(Number);
+            
+            // 计算夜班小时
+            while (currentTime < end) {
+                const currentHour = currentTime.getHours();
+                const currentMinute = currentTime.getMinutes();
+                const currentTimeValue = currentHour + currentMinute / 60;
+                
+                const nightStartValue = nightStartHour + nightStartMinute / 60;
+                const nightEndValue = nightEndHour + nightEndMinute / 60;
+                
+                // 处理跨天的夜班时间
+                if (nightStartValue > nightEndValue) {
+                    // 夜班跨天（例如 16:00 到 06:00）
+                    if (currentTimeValue >= nightStartValue || currentTimeValue < nightEndValue) {
+                        nightHours += 1;
+                    }
+                } else {
+                    // 夜班在同一天内
+                    if (currentTimeValue >= nightStartValue && currentTimeValue < nightEndValue) {
+                        nightHours += 1;
+                    }
+                }
+                
+                currentTime.setTime(currentTime.getTime() + (60 * 60 * 1000)); // 加一小时
+            }
+
+            let regularHours = Math.min(8, totalHours);
+            let overtime15 = Math.max(0, Math.min(totalHours - 8, 4));
+            let overtime2 = Math.max(0, totalHours - 12);
+
+            return {
+                date,
+                startTime,
+                endTime,
+                regularHours,
+                overtime15,
+                overtime2,
+                nightHours
+            };
+        }
+
+        // 更新班次表格
+        function updateShiftsTable() {
+            const tbody = document.getElementById('shiftsTableBody');
+            tbody.innerHTML = '';
+            
+            shifts.forEach((shift, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${shift.date}</td>
+                    <td>${shift.startTime}</td>
+                    <td>${shift.endTime}</td>
+                    <td>${shift.regularHours.toFixed(2)}</td>
+                    <td>${shift.overtime15.toFixed(2)}</td>
+                    <td>${shift.overtime2.toFixed(2)}</td>
+                    <td>${shift.nightHours.toFixed(2)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeShift(${index})">Delete</button></td>
+                `;
+            });
+        }
+
+        // 删除班次
+        function removeShift(index) {
+            shifts.splice(index, 1);
+            updateShiftsTable();
+            calculatePay();
+        }
+
+        // 清空所有班次
+        function clearAllShifts() {
+            if (confirm('Are you sure you want to clear all shifts?')) {
+                shifts = [];
+                updateShiftsTable();
+                calculatePay();
+            }
+        }
+
+        // 计算工资
+        function calculatePay() {
+            let totalRegular = 0;
+            let totalOvertime15 = 0;
+            let totalOvertime2 = 0;
+            let totalNight = 0;
+
+            const nightPremiumRate = parseFloat(document.getElementById('nightPremiumRate').value) || 0;
+
+            shifts.forEach(shift => {
+                const rate = shift.hourlyRate;
+                totalRegular += shift.regularHours * rate;
+                totalOvertime15 += shift.overtime15 * rate * 1.5;
+                totalOvertime2 += shift.overtime2 * rate * 2;
+                totalNight += shift.nightHours * nightPremiumRate;
+            });
+
+            const grossPay = Math.round((totalRegular + totalOvertime15 + totalOvertime2 + totalNight) * 100) / 100;
+
+            // 使用固定税率计算扣除项
+            const cpp = Math.round(grossPay * 0.0570 * 100) / 100;  // 5.70%
+            const ei = Math.round(grossPay * 0.0164 * 100) / 100;   // 1.64%
+            const federalTax = Math.round(grossPay * 0.1256 * 100) / 100;  // 12.56%
+            const provincialTax = Math.round(grossPay * 0.0501 * 100) / 100;  // 5.01%
+
+            // 更新显示
+            document.getElementById('regularPay').textContent = `$${totalRegular.toFixed(2)}`;
+            document.getElementById('overtimePay15').textContent = `$${totalOvertime15.toFixed(2)}`;
+            document.getElementById('overtimePay2').textContent = `$${totalOvertime2.toFixed(2)}`;
+            document.getElementById('nightDiffPay').textContent = `$${totalNight.toFixed(2)}`;
+            document.getElementById('totalGross').textContent = `$${grossPay.toFixed(2)}`;
+            
+            document.getElementById('cpp').textContent = `$${cpp.toFixed(2)}`;
+            document.getElementById('ei').textContent = `$${ei.toFixed(2)}`;
+            document.getElementById('federalTax').textContent = `$${federalTax.toFixed(2)}`;
+            document.getElementById('provincialTax').textContent = `$${provincialTax.toFixed(2)}`;
+            
+            const totalDeductions = Math.round((cpp + ei + federalTax + provincialTax) * 100) / 100;
+            document.getElementById('totalDeductions').textContent = `$${totalDeductions.toFixed(2)}`;
+            
+            const netPay = Math.round((grossPay - totalDeductions) * 100) / 100;
+            document.getElementById('netPay').textContent = `$${netPay.toFixed(2)}`;
+        }
+    </script>
 </body>
 </html>
